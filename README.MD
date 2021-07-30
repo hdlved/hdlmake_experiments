@@ -1,18 +1,39 @@
 Purpose of this project:  
   Test (and develop) the capabilites of HDLMAKE. 
-  Initially this has been used to prototpye support for VHDL libraries. However the code also requires 
+  Initially this has been used to prototpye support for VHDL libraries. However the code also requires symlinking to workarround Xilinx ISE issues.
   
-  This is based on using the current latest version of HDLMAKE from OHWR (branch develop) to work with multiple libraries, and re-use a single source (.vhd) file in multiple libraries, This does demonstrate an alternative way of building a CSR to Cheby...  
+  This is based on using the current latest version of HDLMAKE from OHWR (branch develop) (https://ohwr.org/project/hdl-make/tree/develop).
+    if doing any development the Autor strongly suggests you configure hdlmake to run using the source rather than installing it (e.g. https://hdlmake.readthedocs.io/en/master/#installing-hdlmake)
 
-there are 2 libraries hdl/rtl/lib_a and hdl/rtl/lib_b; Both of these libraries contain:
+  Most of the results of this work have already been merged back into HDLMAKE. 
+  
+  
+Description of the RTL
+  
+Notionally I wanted to demonstrate the use of Libraries as an Alternative to some fo the features of VHDL'08 (e.g. generic types and functions), and a register set is an ideal example component for this.
+Additionally when wanting to use another OHWR (CERN) project CHEBY to produce a register set, I had to copy ane edit the file to produce different bus protocols. 
+Seperating the functionality of the module and it's 'user' IO from the bus-specific implementation increases re-use. To the autors mind, as an approach, it also increases the readability to a human: 
+  e.g. the register_address -> feild within the user_io record is more debuggable to a human.
+Although not the main purpose of this repository it highlights a possilbe extension to tools such as Cheby.
+
+NOTE: although notionally a AXI4_Lite register set this is NOT compliant!!!
+
+There are 2 libraries hdl/rtl/lib_a and hdl/rtl/lib_b; Both of these libraries contain:
  - "register_types_pkg.vhd"      : records for the local IO of a register block (rather than the bus interface) specific to the library
  - "register_access_fns_pkg.vhd" : A package that converts handles byte mapping the feilds from the records (register_types_pkg.vhd) to the bus. 
-
  
-hdl/rtl/common/axi_regs.vhd  is compiled into both lib_a and lib_b libraries,  so we get code-reuse of this module.
+hdl/rtl/common_across_libs/axi_regs.vhd  
+ - is compiled into both lib_a and lib_b libraries,  so we get code-reuse of this module.
+ - HOWEVER because of an ISE bug symlinking us used instead oif just directly referencing the file... 
+     
+hdl/rtl.lib_c 
+ - contains some example code to use axi_regs from both lib_a and lib_b into the same entity, and wire them together.
 
+      
 Benefits:
- - pre verified module that can just use a package to re-map register feilds. 
+ - pre verified module (axi_regs) that can just use a package to re-map register feilds.
+    the approach of writing out records and addr_mapping functions also works with VHDL'08, 
+    but you would use generic types for IO instead of a record and per-implementation libraries.  
  - Bus width change is a generic that can be passed down and into the module.
  - generics can control pipelineing etc within a module. Potentially on a per instance basis if the library component is reused. 
  - writing a replacement for axi_regs would allows the same register mapping package to support a different bus protocol e.g. WB or avalon.......
@@ -21,7 +42,7 @@ Benefits:
  - the code for the register block is simpler to edit and the packages are Very human readable!
  
 disadvantages: 
- - Bugfixes in HDLMAKE for library support. 
+ - Bugfixes were required for HDLMAKE library support. 
  - Vendor tool bugs (Libero)
  - If registers were to be implemented this way then it needs a code-gen adding in CHEBY.
  - feature support and growth, is potentially a little more involved 
@@ -70,4 +91,8 @@ Synthesis / FPGA toolflows
   - Currently WORK in progresss.  the Author is experimenting with Supporting SynplifyPro as a standalone tool in HDLMAKE.
   - This is allow direct control of syntheis to work arround the Libero UI bug above.
   - The HDLMAKE code for this is not yet public...
+  
+  
+  
+  
   
