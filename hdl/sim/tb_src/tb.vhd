@@ -101,6 +101,8 @@ begin
   -- Generate the test stimulus
   stimulus: process begin
     -- Wait for the Reset to be released before
+    report "TODO: actually do some usefull testing!" severity error;
+    
     wait until (rst_n = '1');
 
     for i in 0 to 100 loop

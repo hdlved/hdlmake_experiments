@@ -1,0 +1,106 @@
+#--  Synopsys, Inc.
+#--  Version R-2020.09M-SP1-1
+#--  Project file D:\hdlved\exp_hdlmake\hdl\syn\synplify_libero\test.prj
+#--  Written on Wed Jun 16 20:45:34 2021
+
+
+#project files
+add_file -vhdl -lib lib_a "../../rtl/lib_a/register_types_pkg.vhd"
+add_file -vhdl -lib lib_b "../../rtl/lib_b/register_types_pkg.vhd"
+add_file -vhdl -lib lib_a "../../rtl/lib_a/register_access_fns_pkg.vhd"
+add_file -vhdl -lib lib_a "../../rtl/lib_a/axi_regs.vhd"
+add_file -vhdl -lib lib_b "../../rtl/lib_b/register_access_fns_pkg.vhd"
+add_file -vhdl -lib lib_b "../../rtl/lib_b/axi_regs.vhd"
+add_file -vhdl -lib lib_c "../../rtl/lib_c/merged_top.vhd"
+add_file -vhdl -lib lib_c "../../rtl/lib_c/repinned_top.vhd"
+add_file -fpga_constraint "constraints.fdc"
+
+
+#implementation: "rev_1"
+impl -add rev_1 -type fpga
+
+#
+#implementation attributes
+
+set_option -vlog_std sysv
+set_option -project_relative_includes 1
+
+#device options
+set_option -technology POLARFIRESOC
+set_option -part MPFS025T
+set_option -package FCVG484
+set_option -speed_grade STD
+set_option -part_companion ""
+
+#compilation/mapping options
+set_option -use_fsm_explorer 0
+set_option -top_module "lib_c.repinned_top"
+
+# hdl_compiler_options
+set_option -distributed_compile 0
+set_option -hdl_strict_syntax 0
+
+# mapper_without_write_options
+set_option -frequency auto
+set_option -srs_instrumentation 1
+
+# mapper_options
+set_option -write_verilog 1
+set_option -write_structural_verilog 0
+set_option -write_vhdl 0
+
+# actel_options
+set_option -rw_check_on_ram 0
+
+# Microchip G4
+set_option -run_prop_extract 1
+set_option -maxfan 10000
+set_option -clock_globalthreshold 2
+set_option -async_globalthreshold 800
+set_option -globalthreshold 5000
+set_option -low_power_ram_decomp 0
+set_option -seqshift_to_uram 1
+set_option -disable_io_insertion 0
+set_option -opcond COMTC
+set_option -retiming 0
+set_option -report_path 4000
+set_option -update_models_cp 0
+set_option -preserve_registers 0
+set_option -disable_ramindex 0
+set_option -rep_clkint_driver 1
+set_option -microsemi_enhanced_flow 1
+set_option -ternary_adder_decomp 66
+set_option -pack_uram_addr_reg 1
+
+# Microchip PolarFireSoC
+set_option -automatic_compile_point 1
+set_option -rom_map_logic 1
+set_option -polarfire_ram_init 1
+set_option -gclkint_threshold 1000
+set_option -rgclkint_threshold 100
+set_option -clkint_rgclkint_limit 1
+set_option -low_power_gated_clock 0
+set_option -gclk_resource_count 24
+set_option -min_cdc_sync_flops 2
+set_option -unsafe_cdc_netlist_property 0
+
+# NFilter
+set_option -no_sequential_opt 0
+
+# sequential_optimization_options
+set_option -symbolic_fsm_compiler 1
+
+# Compiler Options
+set_option -compiler_compatible 0
+set_option -resource_sharing 1
+set_option -multi_file_compilation_unit 1
+
+# Compiler Options
+set_option -auto_infer_blackbox 0
+
+#automatic place and route (vendor) options
+set_option -write_apr_constraint 1
+
+#set result format/file last
+project -result_file "rev_1/test.vm"
+impl -active "rev_1"

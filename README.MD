@@ -50,11 +50,24 @@ Synthesis / FPGA toolflows
 
 - Quartus_pro (windows): Works
 
-- liberio (windows): fails
+- liberioSOC (windows): fails
   - hdlmake output needs support for VHDL libraries, example of what I would expect to be generated (files.tcl and project.tcl) is commited	
   - Liberio has 2 bugs
     - UI does not display both "regs" instances. only one is shown.
     - When Libero writes out as a script for synplify_pro to synthesise, some files are missing. (matching UI behav above)
-      - An example project has been added to show synplify works correctly, (hdl/syn/synplify_libero). The outpus form synplify is corectly handeled by libero.
+      - An example project has been added to show synplify works correctly, (hdl/syn/synplify_libero). The outpus form synplify is corectly handeled by libero.     
      
+- liberosoc_synplify (windows) : pass
+  - this does not test HDLMAKE but contains a project file to demonstrate that the code can be processed by the synthesis tool used in LiberoSOC as described above 
       
+- GHDL Synthesis (Linux xxxx): fails
+  - hdlmake produces a correct Makefile, but the HDL pushes GHDL a little too far, fixes in progress...
+    - extraneous use of Library
+    - multiple components in output .vhd with the same name (i.e. not having a unique name including library)
+  - Manifest.py should allow for setting the output filename.
+ 
+- Synplify_pro (windows): pass
+  - Currently WORK in progresss.  the Author is experimenting with Supporting SynplifyPro as a standalone tool in HDLMAKE.
+  - This is allow direct control of syntheis to work arround the Libero UI bug above.
+  - The HDLMAKE code for this is not yet public...
+  
